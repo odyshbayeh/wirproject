@@ -5,7 +5,8 @@ import numpy as np
 from math import sqrt, ceil
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 
 # === Gemini API Key ===
 genai.configure(api_key="AIzaSyC5Zk54SNRj64kj7MsGidogOkkwEsE_sH0")  # Replace with your real key
