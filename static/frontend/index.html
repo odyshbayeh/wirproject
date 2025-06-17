@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wireless AI Assistant (Full Demo)</title>
+  <!-- Add Marked.js for Markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      max-width: 600px;
+      margin: 40px auto;
+      box-shadow: 0 8px 32px 0 rgba(60,60,80,0.11);
+      border-radius: 18px;
+      padding: 32px 28px 36px 28px;
+    }
+    h2 {
+      text-align: center;
+      color: #222a35;
+      font-size: 2em;
+      margin-bottom: 28px;
+      letter-spacing: 1px;
+    }
+    label {
+      display: block;
+      margin-top: 16px;
+      font-weight: 500;
+      color: #385170;
+      font-size: 1.08em;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 7px;
+      margin-bottom: 15px;
+      border: 1.2px solid #bdd4e7;
+      border-radius: 8px;
+      font-size: 1em;
+      background: #f7fafc;
+      transition: border 0.2s;
+    }
+    input:focus, select:focus {
+      border-color: #3e92cc;
+      outline: none;
+      background: #eaf6fb;
+    }
+    button {
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+      background: linear-gradient(90deg,#2567c3 60%,#0db2de 100%);
+      color: #fff;
+      font-size: 1.13em;
+      font-weight: 600;
+      padding: 13px 0;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px 0 rgba(60,60,80,0.08);
+      cursor: pointer;
+      transition: background 0.22s;
+    }
+    button:hover, button:focus {
+      background: linear-gradient(90deg,#174ea6 60%,#06a7c4 100%);
+    }
+    #response {
+      margin-top: 32px;
+      background: #e9f3fc;
+      border-left: 6px solid #3e92cc;
+      padding: 18px 18px 12px 18px;
+      border-radius: 8px;
+      color: #222a35;
+      font-size: 1.12em;
+      box-shadow: 0 1px 8px 0 rgba(60,60,80,0.07);
+      min-height: 30px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    ul {
+      margin-top: 10px;
+      margin-bottom: 18px;
+      padding-left: 24px;
+    }
+    ul li {
+      margin-bottom: 4px;
+    }
+    .section-title {
+      margin-bottom: 5px;
+      font-size: 1.11em;
+      color: #215176;
+      font-weight: bold;
+      letter-spacing: .02em;
+    }
+    /* Markdown styles */
+    .markdown {
+      font-size: 1.06em;
+      color: #1c2430;
+    }
+    .markdown h1, .markdown h2, .markdown h3 { margin: 1em 0 0.5em; }
+    .markdown ul { margin-left: 24px; }
+    .markdown li { margin-bottom: 5px; }
+    .markdown strong { font-weight: bold; }
+    .markdown em { font-style: italic; }
+    @media (max-width: 650px) {
+      .container { max-width: 97vw; padding: 12vw 3vw 12vw 3vw; }
+      h2 { font-size: 1.3em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Wireless & Mobile Networks: AI Assistant</h2>
+    <label>
+      Select scenario:
+      <select id="scenario">
+        <option value="wireless">Wireless Communication System</option>
+        <option value="ofdm">OFDM System</option>
+        <option value="link_budget">Link Budget Calculation</option>
+        <option value="cellular">Cellular System Design</option>
+      </select>
+    </label>
+    <form id="params-form"></form>
+    <button onclick="submitForm()">Compute & Get AI Explanation</button>
+    <div id="response"></div>
+  </div>
+  <script>
+    const paramInputs = {
+      wireless: [
+        { name: "bandwidth", label: "Bandwidth (Hz)", type: "number" },
+        { name: "bits_per_sample", label: "Bits per sample (Quantizer)", type: "number" }
+      ],
+      ofdm: [
+        { name: "n_subcarriers", label: "Number of subcarriers", type: "number" },
+        { name: "bits_per_symbol", label: "Bits per symbol", type: "number" },
+        { name: "symbols_per_sec", label: "Symbols per second", type: "number" },
+        { name: "bandwidth", label: "Bandwidth (Hz)", type: "number" }
+      ],
+      link_budget: [
+        { name: "tx_power_dbm", label: "Transmitted power (dBm)", type: "number" },
+        { name: "tx_gain_db", label: "Transmitter gain (dB)", type: "number" },
+        { name: "rx_gain_db", label: "Receiver gain (dB)", type: "number" },
+        { name: "distance_km", label: "Distance (km)", type: "number" },
+        { name: "freq_mhz", label: "Frequency (MHz)", type: "number" }
+      ],
+      cellular: [
+        { name: "area_km2", label: "Coverage area (km²)", type: "number" },
+        { name: "cell_radius_km", label: "Cell radius (km)", type: "number" },
+        { name: "users_per_cell", label: "Users per cell", type: "number" }
+      ]
+    };
+
+    const scenarioSelect = document.getElementById('scenario');
+    const paramsForm = document.getElementById('params-form');
+    const responseDiv = document.getElementById('response');
+
+    function renderForm() {
+      const scenario = scenarioSelect.value;
+      paramsForm.innerHTML = "";
+      paramInputs[scenario].forEach(input => {
+        paramsForm.innerHTML += `
+          <label>${input.label}<br>
+            <input type="${input.type}" name="${input.name}" required>
+          </label>
+        `;
+      });
+    }
+    renderForm();
+    scenarioSelect.onchange = renderForm;
+
+    // This function pretty-prints results for each scenario
+    function resultToHTML(scenario, result) {
+      if (!result) return '';
+      if (scenario === "wireless") {
+        return `
+          <div class="section-title">Wireless Communication System Results:</div>
+          <ul>
+            <li>Sampler: <b>${result.sampler} bps</b></li>
+            <li>Quantizer: <b>${result.quantizer} bps</b></li>
+            <li>Source Encoder: <b>${result.source_encoder} bps</b></li>
+            <li>Channel Encoder: <b>${result.channel_encoder} bps</b></li>
+            <li>Interleaver: <b>${result.interleaver} bps</b></li>
+            <li>Burst Formatter: <b>${result.burst_formatter} bps</b></li>
+          </ul>
+        `;
+      }
+      if (scenario === "ofdm") {
+        return `
+          <div class="section-title">OFDM System Results:</div>
+          <ul>
+            <li>Data Rate: <b>${result.data_rate} bps</b></li>
+            <li>Spectral Efficiency: <b>${result.spectral_efficiency} bps/Hz</b></li>
+          </ul>
+        `;
+      }
+      if (scenario === "link_budget") {
+        return `
+          <div class="section-title">Link Budget Calculation Results:</div>
+          <ul>
+            <li>FSPL: <b>${result.fspl} dB</b></li>
+            <li>Received Power: <b>${result.rx_power_dbm} dBm</b></li>
+          </ul>
+        `;
+      }
+      if (scenario === "cellular") {
+        return `
+          <div class="section-title">Cellular System Design Results:</div>
+          <ul>
+            <li>Number of Cells: <b>${result.n_cells}</b></li>
+            <li>Total Users: <b>${result.total_users}</b></li>
+          </ul>
+        `;
+      }
+      return '';
+    }
+
+    async function submitForm() {
+      responseDiv.innerHTML = "Loading...";
+      const scenario = scenarioSelect.value;
+      const inputs = paramsForm.querySelectorAll('input');
+      const params = {};
+      for (const input of inputs) {
+        if (!input.value) {
+          responseDiv.innerHTML = "Please fill all parameters.";
+          return;
+        }
+        params[input.name] = input.value;
+      }
+
+      try {
+        const res = await fetch('http://127.0.0.1:5000/api/calculate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ scenario, params })
+        });
+        if (!res.ok) throw new Error("Server error");
+        const data = await res.json();
+        responseDiv.innerHTML =
+          resultToHTML(scenario, data.result) +
+          `<div class="section-title">AI Explanation:</div><div class="markdown">${marked.parse(data.explanation)}</div>`;
+      } catch (err) {
+        responseDiv.innerHTML = "Error: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
