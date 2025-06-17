@@ -17,17 +17,6 @@ This is an AI-powered web application designed to assist in key calculations for
 
 ---
 
-## 📁 Project Structure
-
-wirproject/
-├── app.py # Main Flask backend
-├── requirements.txt # Python dependencies
-├── templates/
-│ └── index.html # Welcome page UI
-├── static/frontend/
-│ └── index.html # Main interactive UI for scenarios
-
-
 📜 License
 This project is for educational purposes and may contain proprietary elements. For reuse or modification, please contact the project authors.
 
