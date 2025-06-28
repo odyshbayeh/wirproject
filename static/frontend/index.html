@@ -149,70 +149,210 @@
     </div>
     <script>
       const paramInputs = {
-       wireless: [
-            { name: "bandwidth_khz", label: "Signal bandwidth (kHz)", type: "number", step: "0.01" },
-            { name: "bits_per_sample", label: "Bits per sample (Quantizer)", type: "number" },
-            { name: "src_compression_rate", label: "Source encoder compression rate ", type: "number", step: "0.01" },
-            { name: "channel_code_rate", label: "Channel code rate ", type: "number", step: "0.01" },
-            { name: "burst_formatting_overhead", label: "Burst formatting overhead ", type: "number", step: "0.01" }
-          ],
+        wireless: [
+          {
+            name: "bandwidth_khz",
+            label: "Signal bandwidth (kHz)",
+            type: "number",
+            step: "0.01",
+          },
+          {
+            name: "bits_per_sample",
+            label: "Bits per sample (Quantizer)",
+            type: "number",
+          },
+          {
+            name: "src_compression_rate",
+            label: "Source encoder compression rate ",
+            type: "number",
+            step: "0.01",
+          },
+          {
+            name: "channel_code_rate",
+            label: "Channel code rate ",
+            type: "number",
+            step: "0.01",
+          },
+          {
+            name: "burst_formatting_overhead",
+            label: "Burst formatting overhead ",
+            type: "number",
+            step: "0.01",
+          },
+        ],
         ofdm: [
-          { name: "rb_bandwidth_khz", label: "Resource block bandwidth (kHz)", type: "number" },
-          { name: "subcarrier_spacing_khz", label: "Subcarrier spacing (kHz)", type: "number" },
-          { name: "n_ofdm_symbols", label: "OFDM symbols per resource block", type: "number" },
-          { name: "mod_order", label: "QAM modulation order (1024 for 1024-QAM)", type: "number" },
-          { name: "rb_duration_ms", label: "Resource block duration (ms)", type: "number" },
-          { name: "n_parallel_rbs", label: "Number of parallel RBs (for user e.g:  4)", type: "number" }
+          {
+            name: "rb_bandwidth_khz",
+            label: "Resource block bandwidth (kHz)",
+            type: "number",
+          },
+          {
+            name: "subcarrier_spacing_khz",
+            label: "Subcarrier spacing (kHz)",
+            type: "number",
+          },
+          {
+            name: "n_ofdm_symbols",
+            label: "OFDM symbols per resource block",
+            type: "number",
+          },
+          {
+            name: "mod_order",
+            label: "QAM modulation order (1024 for 1024-QAM)",
+            type: "number",
+          },
+          {
+            name: "rb_duration_ms",
+            label: "Resource block duration (ms)",
+            type: "number",
+          },
+          {
+            name: "n_parallel_rbs",
+            label: "Number of parallel RBs (for user e.g:  4)",
+            type: "number",
+          },
         ],
         link_budget: [
           { name: "tx_power_db", label: "Transmit Power (dB)", type: "number" },
           { name: "rx_power_db", label: "Received Power (dB)", type: "number" },
-          { name: "tx_gain_db", label: "Transmitter antenna gain (dB)", type: "number" },
-          { name: "tx_amplifier_gain_db", label: "Transmitter amplifier gain (dB)", type: "number" },
-          { name: "tx_loss_db", label: "Transmitter cable/feed loss (dB)", type: "number" },
-          { name: "rx_gain_db", label: "Receiver antenna gain (dB)", type: "number" },
-          { name: "rx_amplifier_gain_db", label: "Receiver amplifier gain (dB)", type: "number" },
-          { name: "rx_loss_db", label: "Receiver cable/feed loss (dB)", type: "number" },
+          {
+            name: "tx_gain_db",
+            label: "Transmitter antenna gain (dB)",
+            type: "number",
+          },
+          {
+            name: "tx_amplifier_gain_db",
+            label: "Transmitter amplifier gain (dB)",
+            type: "number",
+          },
+          {
+            name: "tx_loss_db",
+            label: "Transmitter cable/feed loss (dB)",
+            type: "number",
+          },
+          {
+            name: "rx_gain_db",
+            label: "Receiver antenna gain (dB)",
+            type: "number",
+          },
+          {
+            name: "rx_amplifier_gain_db",
+            label: "Receiver amplifier gain (dB)",
+            type: "number",
+          },
+          {
+            name: "rx_loss_db",
+            label: "Receiver cable/feed loss (dB)",
+            type: "number",
+          },
           { name: "freq_mhz", label: "Frequency (MHz)", type: "number" },
           { name: "distance_m", label: "Distance (meters)", type: "number" },
-          { name: "path_loss_db", label: "Direct Path Loss (dB)", type: "number" },
+          {
+            name: "path_loss_db",
+            label: "Direct Path Loss (dB)",
+            type: "number",
+          },
           { name: "other_loss_db", label: "Other losses (dB)", type: "number" },
           { name: "fade_margin_db", label: "Fade margin (dB)", type: "number" },
           { name: "data_rate_bps", label: "Data rate (bps)", type: "number" },
-          { name: "noise_figure_db", label: "Noise Figure (dB)", type: "number" },
-          { name: "noise_temp_K", label: "Noise Temperature (K)", type: "number" },
-          { name: "required_ebn0_db", label: "Required Eb/N0 (dB)", type: "number" }
-        ]
-        ,
+          {
+            name: "noise_figure_db",
+            label: "Noise Figure (dB)",
+            type: "number",
+          },
+          {
+            name: "noise_temp_K",
+            label: "Noise Temperature (K)",
+            type: "number",
+          },
+          {
+            name: "required_ebn0_db",
+            label: "Required Eb/N0 (dB)",
+            type: "number",
+          },
+        ],
         cellular: [
-          { name: "timeslots_per_carrier", label: "Timeslots per carrier ", type: "number" },
+          {
+            name: "timeslots_per_carrier",
+            label: "Timeslots per carrier ",
+            type: "number",
+          },
           { name: "area_km2", label: "Coverage area (m²)", type: "number" },
-          { name: "n_users", label: "Total number of subscribers/users", type: "number" },
-          { name: "call_rate", label: "Average calls per subscriber per day", type: "number", step: "0.01" },
-          { name: "avg_call_duration_min", label: "Average call duration (minutes)", type: "number", step: "0.01" },
-          { name: "min_sir_db", label: "Minimum SIR required (dB)", type: "number", step: "0.01" },
-          { name: "ref_power_db", label: "Reference power at reference distance (dB)", type: "number", step: "0.01" },
-          { name: "ref_distance_m", label: "Reference distance (meters)", type: "number", step: "0.01" },
-          { name: "path_loss_exp", label: "Path loss exponent", type: "number", step: "0.01" },
-          { name: "receiver_sensitivity_uw", label: "Receiver sensitivity (μW)", type: "number", step: "0.01" },
-          { name: "cochannel_interferers", label: "Number of co-channel interfering cells", type: "number" },
-          { name: "n_channels", label: "Number of channels (total)", type: "number" }
-        ]
+          {
+            name: "n_users",
+            label: "Total number of subscribers/users",
+            type: "number",
+          },
+          {
+            name: "call_rate",
+            label: "Average calls per subscriber per day",
+            type: "number",
+            step: "0.01",
+          },
+          {
+            name: "avg_call_duration_min",
+            label: "Average call duration (minutes)",
+            type: "number",
+            step: "0.01",
+          },
+          {
+            name: "min_sir_db",
+            label: "Minimum SIR required (dB)",
+            type: "number",
+            step: "0.01",
+          },
+          {
+            name: "ref_power_db",
+            label: "Reference power at reference distance (dB)",
+            type: "number",
+            step: "0.01",
+          },
+          {
+            name: "ref_distance_m",
+            label: "Reference distance (meters)",
+            type: "number",
+            step: "0.01",
+          },
+          {
+            name: "path_loss_exp",
+            label: "Path loss exponent",
+            type: "number",
+            step: "0.01",
+          },
+          {
+            name: "receiver_sensitivity_uw",
+            label: "Receiver sensitivity (μW)",
+            type: "number",
+            step: "0.01",
+          },
+          {
+            name: "cochannel_interferers",
+            label: "Number of co-channel interfering cells",
+            type: "number",
+          },
+          {
+            name: "n_channels",
+            label: "Number of channels (total)",
+            type: "number",
+          },
+        ],
       };
 
-      const scenarioSelect = document.getElementById('scenario');
-      const paramsForm = document.getElementById('params-form');
-      const responseDiv = document.getElementById('response');
+      const scenarioSelect = document.getElementById("scenario");
+      const paramsForm = document.getElementById("params-form");
+      const responseDiv = document.getElementById("response");
 
       function renderForm() {
         const scenario = scenarioSelect.value;
         paramsForm.innerHTML = "";
-        paramInputs[scenario].forEach(input => {
+        paramInputs[scenario].forEach((input) => {
           paramsForm.innerHTML += `
-            <label>${input.label}<br>
-              <input type="${input.type}" name="${input.name}" ${input.step ? step="${input.step}" : ""}>
-            </label>
-          `;
+          <label>${input.label}<br>
+            <input type="${input.type}" name="${input.name}" ${
+            input.step ? (step = "${input.step}") : ""
+          }>
+          </label>
+        `;
         });
       }
 
@@ -220,35 +360,39 @@
       scenarioSelect.onchange = renderForm;
 
       function resultToHTML(scenario, result) {
-        if (!result) return '';
-        let html = `<div class="section-title">${scenario.replace('_',' ').replace(/\b\w/g, l => l.toUpperCase())} Results:</div><ul>`;
+        if (!result) return "";
+        let html = `<div class="section-title">${scenario
+          .replace("_", " ")
+          .replace(/\b\w/g, (l) => l.toUpperCase())} Results:</div><ul>`;
         for (const [k, v] of Object.entries(result)) {
-          html += `<li><b>${k.replace(/_/g,' ')}:</b> ${v}</li>`;
+          html += `<li><b>${k.replace(/_/g, " ")}:</b> ${v}</li>`;
         }
-        html += '</ul>';
+        html += "</ul>";
         return html;
       }
 
       async function submitForm() {
         responseDiv.innerHTML = "Loading...";
         const scenario = scenarioSelect.value;
-        const inputs = paramsForm.querySelectorAll('input');
+        const inputs = paramsForm.querySelectorAll("input");
         const params = {};
         for (const input of inputs) {
           if (!input.value) continue;
           params[input.name] = input.value;
         }
         try {
-          const res = await fetch('/api/calculate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ scenario, params })
+          const res = await fetch("/api/calculate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ scenario, params }),
           });
           if (!res.ok) throw new Error("Server error");
           const data = await res.json();
           responseDiv.innerHTML =
             resultToHTML(scenario, data.result) +
-            `<div class="section-title">AI Explanation:</div><div class="markdown">${marked.parse(data.explanation)}</div>`;
+            `<div class="section-title">AI Explanation:</div><div class="markdown">${marked.parse(
+              data.explanation
+            )}</div>`;
         } catch (err) {
           responseDiv.innerHTML = "Error: " + err.message;
         }
