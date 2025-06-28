@@ -22,7 +22,6 @@ def landing():
 def serve_frontend(filename):
     return send_from_directory('static/frontend', filename)
 
-@app.route('/api/calculate', methods=['POST'])
 def wireless_system_calc(params):
     results = {}
     bw = float(params.get('bandwidth_khz', 0)) or None
