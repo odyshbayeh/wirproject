@@ -2,4 +2,3 @@ Flask
 flask-cors
 google-generativeai
 numpy
-math
