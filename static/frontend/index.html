@@ -221,8 +221,10 @@
 
       function resultToHTML(scenario, result) {
         if (!result) return '';
-        let html = <div class="section-title">${scenario.replace('_',' ').replace(/\b\w/g, l => l.toUpperCase())} Results:</div><ul>;
-        for (const [k, v] of Object.entries(result)) {html += <li><b>${k.replace(/_/g,' ')}:</b> ${v}</li>;}
+        let html = `<div class="section-title">${scenario.replace('_',' ').replace(/\b\w/g, l => l.toUpperCase())} Results:</div><ul>`;
+        for (const [k, v] of Object.entries(result)) {
+          html += `<li><b>${k.replace(/_/g,' ')}:</b> ${v}</li>`;
+        }
         html += '</ul>';
         return html;
       }
@@ -246,7 +248,7 @@
           const data = await res.json();
           responseDiv.innerHTML =
             resultToHTML(scenario, data.result) +
-            <div class="section-title">AI Explanation:</div><div class="markdown">${marked.parse(data.explanation)}</div>;
+            `<div class="section-title">AI Explanation:</div><div class="markdown">${marked.parse(data.explanation)}</div>`;
         } catch (err) {
           responseDiv.innerHTML = "Error: " + err.message;
         }
