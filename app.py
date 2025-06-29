@@ -288,7 +288,7 @@ def cellular_system_calc(params):
         total_carriers = int(ceil(n_channels / timeslots_per_carrier))
         results['7-Total_carriers'] = total_carriers
         results['8-Number of carrier of whole system'] = total_carriers * N_cluster 
-        results['9-Taoal of  cluster'] = n_cells /N_cluster
+        results['9-Total of  cluster'] = n_cells /N_cluster
 
     else:
         results['total_carriers'] = None
