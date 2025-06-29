@@ -660,8 +660,8 @@
             canBeNegative: false,
           },
           {
-            name: "area_km2",
-            label: "Coverage Area (km²)",
+            name: "area_m2",
+            label: "Coverage Area (m²)",
             type: "number",
             canBeNegative: false,
           },
@@ -836,7 +836,7 @@
           params[input.name] = input.value;
         }
         try {
-          const res = await fetch("http:/api/calculate", {
+          const res = await fetch("/api/calculate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ scenario, params }),
