@@ -4,104 +4,300 @@
     <meta charset="UTF-8" />
     <title>Wireless AI Assistant</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      html,
       body {
-        font-family: "Segoe UI", Arial, sans-serif;
-        background: #f0f4f8;
+        height: 100%;
+      }
+      body {
+        font-family: "Inter", "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(120deg, #e8e9f3 0%, #d1e1f6 100%);
         margin: 0;
         padding: 0;
         min-height: 100vh;
+        position: relative;
+        transition: background 0.3s, color 0.3s;
+        overflow-x: hidden;
+      }
+      .bg-svg {
+        position: fixed;
+        z-index: 0;
+        inset: 0;
+        pointer-events: none;
+      }
+      .bg-svg::before,
+      .bg-svg::after {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+      }
+      .bg-svg::before {
+        width: 100vw;
+        height: 60vh;
+        left: 0;
+        top: -10vh;
+        background: radial-gradient(
+          ellipse 80% 70% at 60% 10%,
+          #8fd3f4 0%,
+          #a6c1ee 100%
+        );
+        opacity: 0.32;
+        filter: blur(24px);
+      }
+      .bg-svg::after {
+        width: 60vw;
+        height: 40vh;
+        right: -6vw;
+        bottom: -10vh;
+        background: radial-gradient(
+          ellipse 60% 60% at 100% 100%,
+          #fbc2eb 0%,
+          #fde2e4 80%
+        );
+        opacity: 0.28;
+        filter: blur(16px);
       }
       .container {
-        background: #fff;
-        max-width: 600px;
-        margin: 40px auto;
-        box-shadow: 0 8px 32px 0 rgba(60, 60, 80, 0.11);
-        border-radius: 18px;
-        padding: 32px 28px 36px 28px;
+        background: rgba(255, 255, 255, 0.86);
+        max-width: 1040px;
+        margin: 60px auto 40px auto;
+        box-shadow: 0 8px 32px 0 rgba(60, 60, 80, 0.13),
+          0 2px 12px 0 rgba(74, 108, 255, 0.08);
+        border-radius: 25px;
+        padding: 44px 40px 36px 40px;
+        position: relative;
+        backdrop-filter: blur(18px);
+        border: 1.3px solid #e7eaf1;
+        z-index: 2;
+        transition: background 0.4s, color 0.3s, box-shadow 0.3s;
       }
       h2 {
         text-align: center;
-        color: #222a35;
-        font-size: 2em;
-        margin-bottom: 28px;
-        letter-spacing: 1px;
+        color: #172a53;
+        font-size: 2.18em;
+        margin-bottom: 40px;
+        letter-spacing: 0.5px;
+        font-weight: 800;
+        text-shadow: 0 2px 10px #c3c8d6a1;
+        letter-spacing: 0.04em;
       }
-      label {
-        display: block;
-        margin-top: 16px;
-        font-weight: 500;
-        color: #385170;
+      .dark-toggle {
+        position: absolute;
+        top: 26px;
+        right: 34px;
+        padding: 8px 18px 8px 12px;
+        background: rgba(255, 255, 255, 0.23);
+        border-radius: 13px;
+        font-size: 1.05em;
+        font-weight: 600;
+        color: #3551af;
+        border: none;
+        box-shadow: 0 1px 4px 0 #c2c8f61a;
+        cursor: pointer;
+        transition: background 0.24s, color 0.2s;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .dark-toggle:hover,
+      .dark-toggle:focus {
+        background: #dde7f4c5;
+        color: #06206b;
+      }
+      /* --- SELECT SCENARIO --- */
+      .scenario-card {
+        background: linear-gradient(95deg, #e6effc 60%, #e0e5f6 100%);
+        border-radius: 15px;
+        box-shadow: 0 3px 16px 0 rgba(107, 144, 255, 0.07),
+          0 2px 12px 0 rgba(74, 108, 255, 0.08);
+        border: 1.5px solid #d6e5fb;
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        padding: 24px 30px 20px 25px;
+        margin-bottom: 38px;
+        margin-top: 10px;
+        position: relative;
+        z-index: 5;
+        max-width: 420px;
+        margin-left: auto;
+        margin-right: auto;
+        transition: box-shadow 0.18s;
+      }
+      .scenario-icon {
+        font-size: 2em;
+        color: #2b5fca;
+        margin-right: 7px;
+        filter: drop-shadow(0 2px 10px #7bbcff30);
+      }
+      .scenario-group {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 2px;
+      }
+      .scenario-label {
+        font-size: 1.13em;
+        font-weight: 700;
+        color: #3056a3;
+        margin-bottom: 7px;
+        letter-spacing: 0.03em;
+        text-shadow: 0 1px 6px #e4eaff44;
+      }
+      .scenario-select {
+        width: 100%;
         font-size: 1.08em;
+        font-weight: 600;
+        padding: 13px 12px;
+        border-radius: 7px;
+        border: 1.4px solid #bed3f9;
+        background: #fafdff;
+        color: #2a3756;
+        transition: border 0.18s, box-shadow 0.18s;
+        box-shadow: 0 1px 8px #cfe6f755;
+        outline: none;
+      }
+      .scenario-select:focus {
+        border-color: #3987ec;
+        box-shadow: 0 2px 12px #87bfff30;
+        background: #ecf2fb;
+        color: #0d3575;
+      }
+
+      /* --- FORM GRID --- */
+      #params-form {
+        margin-top: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+      .input-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 36px;
+        margin-bottom: 0;
+        width: 100%;
+      }
+      .input-col {
+        flex: 1 1 0;
+        min-width: 0;
+        margin-bottom: 0;
+        display: flex;
+        flex-direction: column;
+        background: rgba(247, 250, 255, 0.83);
+        border-radius: 16px;
+        box-shadow: 0 1px 6px #d1e7fa18;
+        border: 1.2px solid #e8eef6;
+        padding: 21px 17px 15px 17px;
+        margin-bottom: 36px;
+        transition: background 0.23s, border 0.23s;
+      }
+      .input-label {
+        font-weight: 700;
+        font-size: 1.11em;
+        letter-spacing: 0.03em;
+        margin-bottom: 10px;
+        color: #3056a3;
+        line-height: 1.4;
+        text-shadow: 0 1px 6px #e4eaff44;
       }
       input[type="number"],
       select {
         width: 100%;
-        padding: 10px;
-        margin-top: 7px;
-        margin-bottom: 15px;
-        border: 1.2px solid #bdd4e7;
+        padding: 14px 15px;
+        margin: 0;
+        border: 1.5px solid #e4e9f1;
         border-radius: 8px;
-        font-size: 1em;
-        background: #f7fafc;
-        transition: border 0.2s;
+        font-size: 1.07em;
+        background: #fafdff;
+        font-weight: 600;
+        color: #224;
+        box-shadow: 0 1px 2.5px #f2f7ff50;
+        outline: none;
+        transition: border 0.2s, background 0.3s, color 0.3s;
       }
       input:focus,
       select:focus {
-        border-color: #3e92cc;
-        outline: none;
-        background: #eaf6fb;
+        border-color: #3987ec;
+        background: #ecf2fb;
+        color: #0d3575;
       }
-      button {
-        display: block;
-        width: 100%;
-        margin-top: 20px;
-        background: linear-gradient(90deg, #2567c3 60%, #0db2de 100%);
-        color: #fff;
-        font-size: 1.13em;
+      input.invalid {
+        border-color: #ff5959 !important;
+        background: #fff1f1 !important;
+      }
+      .error-message {
+        color: #d40034;
+        font-size: 1em;
         font-weight: 600;
-        padding: 13px 0;
+        margin-top: 8px;
+        display: none;
+        letter-spacing: 0.01em;
+      }
+      button:not(.dark-toggle) {
+        width: 100%;
+        margin-top: 28px;
+        background: linear-gradient(90deg, #2264c3 60%, #00a2d5 100%);
+        color: #fff;
+        font-size: 1.16em;
+        font-weight: 700;
+        padding: 15px 0 15px 0;
         border: none;
-        border-radius: 8px;
-        box-shadow: 0 4px 16px 0 rgba(60, 60, 80, 0.08);
+        border-radius: 12px;
+        box-shadow: 0 4px 16px 0 rgba(60, 60, 80, 0.13);
         cursor: pointer;
         transition: background 0.22s;
+        letter-spacing: 0.03em;
       }
-      button:hover,
-      button:focus {
+      button:not(.dark-toggle):hover,
+      button:not(.dark-toggle):focus {
         background: linear-gradient(90deg, #174ea6 60%, #06a7c4 100%);
       }
       #response {
-        margin-top: 32px;
-        background: #e9f3fc;
-        border-left: 6px solid #3e92cc;
-        padding: 18px 18px 12px 18px;
-        border-radius: 8px;
-        color: #222a35;
-        font-size: 1.12em;
-        box-shadow: 0 1px 8px 0 rgba(60, 60, 80, 0.07);
+        margin-top: 35px;
+        background: linear-gradient(104deg, #e9f3fc 70%, #dde9f7 100%);
+        border-left: 5px solid #2264c3;
+        padding: 22px 22px 16px 22px;
+        border-radius: 13px;
+        color: #132142;
+        font-size: 1.13em;
+        box-shadow: 0 1px 8px 0 rgba(60, 60, 80, 0.08);
         min-height: 30px;
         white-space: pre-wrap;
         word-break: break-word;
+        transition: background 0.3s, color 0.3s;
       }
       ul {
-        margin-top: 10px;
-        margin-bottom: 18px;
-        padding-left: 24px;
+        margin-top: 13px;
+        margin-bottom: 17px;
+        padding-left: 27px;
       }
       ul li {
-        margin-bottom: 4px;
+        margin-bottom: 7px;
+        font-size: 1.04em;
       }
       .section-title {
-        margin-bottom: 5px;
-        font-size: 1.11em;
+        margin-bottom: 7px;
+        font-size: 1.13em;
         color: #215176;
         font-weight: bold;
         letter-spacing: 0.02em;
+        margin-top: 7px;
+        border-bottom: 1px solid #e1e7f2;
+        padding-bottom: 2.5px;
+        text-shadow: 0 1px 8px #dbe6f233;
+        transition: color 0.3s;
       }
       .markdown {
-        font-size: 1.06em;
+        font-size: 1.09em;
         color: #1c2430;
+        margin-top: 9px;
+        transition: color 0.3s;
       }
       .markdown h1,
       .markdown h2,
@@ -109,250 +305,505 @@
         margin: 1em 0 0.5em;
       }
       .markdown ul {
-        margin-left: 24px;
+        margin-left: 22px;
       }
       .markdown li {
-        margin-bottom: 5px;
+        margin-bottom: 6px;
       }
       .markdown strong {
-        font-weight: bold;
+        font-weight: 600;
       }
       .markdown em {
         font-style: italic;
       }
-      @media (max-width: 650px) {
+      @media (max-width: 900px) {
         .container {
-          max-width: 97vw;
-          padding: 12vw 3vw 12vw 3vw;
+          max-width: 98vw;
+          padding: 5vw 2vw 8vw 2vw;
         }
-        h2 {
-          font-size: 1.3em;
+        .input-row {
+          flex-direction: column;
+          gap: 0;
         }
+        .scenario-card {
+          max-width: 96vw;
+          padding: 18px 10vw 16px 6vw;
+        }
+      }
+      /* --- DARK MODE STYLES --- */
+      body.dark-mode {
+        background: linear-gradient(120deg, #1a202e 0%, #1a222c 100%);
+        color: #e7e7e7;
+      }
+      .container.dark-mode {
+        background: rgba(27, 29, 41, 0.95);
+        color: #e7e7e7;
+        box-shadow: 0 8px 32px 0 rgba(30, 32, 45, 0.25);
+        border: 1.3px solid #22252c;
+      }
+      .container.dark-mode label,
+      .container.dark-mode .section-title {
+        color: #86b7ff;
+        text-shadow: 0 1px 7px #26314a5c;
+        border-bottom: 1px solid #30364c;
+      }
+      .container.dark-mode h2 {
+        color: #f3f6fa;
+        text-shadow: 0 2px 8px #141a25c1;
+      }
+      .container.dark-mode .input-label {
+        color: #7eb4ff;
+      }
+      .container.dark-mode .scenario-card {
+        background: linear-gradient(100deg, #1b2a43 65%, #1a2231 100%);
+        border: 1.5px solid #29334c;
+        box-shadow: 0 3px 20px #0c152333;
+      }
+      .container.dark-mode .scenario-label {
+        color: #b7d7ff;
+      }
+      .container.dark-mode .scenario-icon {
+        color: #ffd560;
+      }
+      .container.dark-mode .scenario-select {
+        background: #242933;
+        color: #f6f6f6;
+        border-color: #374151;
+        box-shadow: 0 1px 8px #333b4330;
+      }
+      .container.dark-mode .scenario-select:focus {
+        border-color: #68b4fa;
+        color: #ffe16e;
+        background: #222c39;
+      }
+      .container.dark-mode input[type="number"],
+      .container.dark-mode select {
+        background: #242933;
+        color: #f6f6f6;
+        border-color: #374151;
+        box-shadow: 0 1px 6px #00000011;
+      }
+      .container.dark-mode input:focus,
+      .container.dark-mode select:focus {
+        background: #23272f;
+        border-color: #3883f6;
+        color: #b5d6ff;
+      }
+      .container.dark-mode input.invalid {
+        background: #432a2a !important;
+        border-color: #ff5b5b !important;
+      }
+      .container.dark-mode .error-message {
+        color: #ff8383;
+      }
+      .container.dark-mode button,
+      .container.dark-mode .dark-toggle {
+        background: linear-gradient(90deg, #284e7d 60%, #1e7998 100%);
+        color: #ffe16e;
+        border: 1.5px solid #34405e;
+      }
+      .container.dark-mode button:hover,
+      .container.dark-mode button:focus,
+      .container.dark-mode .dark-toggle:hover,
+      .container.dark-mode .dark-toggle:focus {
+        background: linear-gradient(90deg, #0d1e34 60%, #009faf 100%);
+        color: #fff6d4;
+      }
+      .container.dark-mode #response {
+        background: linear-gradient(104deg, #212d44 60%, #1d232b 100%);
+        color: #e9eaf3;
+        border-left: 5px solid #5597e9;
+      }
+      .container.dark-mode .markdown {
+        color: #f2f2f2;
       }
     </style>
   </head>
   <body>
-    <div class="container">
+    <div class="bg-svg"></div>
+    <div class="container" id="main-container">
+      <button
+        class="dark-toggle"
+        id="darkToggleBtn"
+        type="button"
+        title="Toggle dark mode"
+      >
+        <span id="dark-icon">🌙</span>
+        <span id="dark-text">Dark Mode</span>
+      </button>
       <h2>Wireless & Mobile Networks: AI Assistant</h2>
-      <label>
-        Select scenario:
-        <select id="scenario">
-          <option value="wireless">Wireless Communication System</option>
-          <option value="ofdm">OFDM System</option>
-          <option value="link_budget">Link Budget Calculation</option>
-          <option value="cellular">Cellular System Design</option>
-        </select>
-      </label>
+      <!-- PROFESSIONAL SCENARIO CARD -->
+      <div class="scenario-card">
+        <span class="scenario-icon">📶</span>
+        <div class="scenario-group">
+          <span class="scenario-label">Select scenario</span>
+          <select id="scenario" class="scenario-select">
+            <option value="wireless">Wireless Communication System</option>
+            <option value="ofdm">OFDM System</option>
+            <option value="link_budget">Link Budget Calculation</option>
+            <option value="cellular">Cellular System Design</option>
+          </select>
+        </div>
+      </div>
       <form id="params-form"></form>
       <button onclick="submitForm()">Compute & Get AI Explanation</button>
       <div id="response"></div>
     </div>
     <script>
+      // --- DARK MODE LOGIC ---
+      const darkToggleBtn = document.getElementById("darkToggleBtn");
+      const darkIcon = document.getElementById("dark-icon");
+      const darkText = document.getElementById("dark-text");
+      const body = document.body;
+      const mainContainer = document.getElementById("main-container");
+      let darkMode = false;
+      darkToggleBtn.onclick = function () {
+        darkMode = !darkMode;
+        if (darkMode) {
+          body.classList.add("dark-mode");
+          mainContainer.classList.add("dark-mode");
+          darkIcon.textContent = "☀️";
+          darkText.textContent = "Light Mode";
+        } else {
+          body.classList.remove("dark-mode");
+          mainContainer.classList.remove("dark-mode");
+          darkIcon.textContent = "🌙";
+          darkText.textContent = "Dark Mode";
+        }
+      };
+
+      // --- FORM & LOGIC ---
       const paramInputs = {
         wireless: [
           {
             name: "bandwidth_khz",
-            label: "Signal bandwidth (kHz)",
+            label: "Signal Bandwidth (kHz)",
             type: "number",
             step: "0.01",
+            canBeNegative: false,
           },
           {
             name: "bits_per_sample",
-            label: "Bits per sample (Quantizer)",
+            label: "Bits per Sample (Quantizer)",
             type: "number",
+            canBeNegative: false,
           },
           {
             name: "src_compression_rate",
-            label: "Source encoder compression rate ",
+            label: "Source Encoder Compression Rate",
             type: "number",
             step: "0.01",
+            canBeNegative: false,
           },
           {
             name: "channel_code_rate",
-            label: "Channel code rate ",
+            label: "Channel Code Rate",
             type: "number",
             step: "0.01",
+            canBeNegative: false,
           },
           {
             name: "burst_formatting_overhead",
-            label: "Burst formatting overhead ",
+            label: "Burst Formatting Overhead",
             type: "number",
             step: "0.01",
+            canBeNegative: false,
           },
         ],
         ofdm: [
           {
             name: "rb_bandwidth_khz",
-            label: "Resource block bandwidth (kHz)",
+            label: "Resource Block Bandwidth (kHz)",
             type: "number",
+            canBeNegative: false,
           },
           {
             name: "subcarrier_spacing_khz",
-            label: "Subcarrier spacing (kHz)",
+            label: "Subcarrier Spacing (kHz)",
             type: "number",
+            canBeNegative: false,
           },
           {
             name: "n_ofdm_symbols",
-            label: "OFDM symbols per resource block",
+            label: "OFDM Symbols per Resource Block",
             type: "number",
+            canBeNegative: false,
           },
           {
             name: "mod_order",
-            label: "QAM modulation order (1024 for 1024-QAM)",
+            label: "QAM Modulation Order (e.g. 1024)",
             type: "number",
+            canBeNegative: false,
           },
           {
             name: "rb_duration_ms",
-            label: "Resource block duration (ms)",
+            label: "Resource Block Duration (ms)",
             type: "number",
+            canBeNegative: false,
           },
           {
             name: "n_parallel_rbs",
-            label: "Number of parallel RBs (for user e.g:  4)",
+            label: "Number of Parallel RBs",
             type: "number",
+            canBeNegative: false,
           },
         ],
         link_budget: [
-          { name: "tx_power_db", label: "Transmit Power (dB)", type: "number" },
-          { name: "rx_power_db", label: "Received Power (dB)", type: "number" },
+          {
+            name: "tx_power_db",
+            label: "Transmit Power (dB)",
+            type: "number",
+            canBeNegative: true,
+          },
+          {
+            name: "rx_power_db",
+            label: "Received Power (dB)",
+            type: "number",
+            canBeNegative: true,
+          },
           {
             name: "tx_gain_db",
-            label: "Transmitter antenna gain (dB)",
+            label: "Transmitter Antenna Gain (dB)",
             type: "number",
+            canBeNegative: true,
           },
           {
             name: "tx_amplifier_gain_db",
-            label: "Transmitter amplifier gain (dB)",
+            label: "Transmitter Amplifier Gain (dB)",
             type: "number",
+            canBeNegative: true,
           },
           {
             name: "tx_loss_db",
-            label: "Transmitter cable/feed loss (dB)",
+            label: "Transmitter Cable/Feed Loss (dB)",
             type: "number",
+            canBeNegative: true,
           },
           {
             name: "rx_gain_db",
-            label: "Receiver antenna gain (dB)",
+            label: "Receiver Antenna Gain (dB)",
             type: "number",
+            canBeNegative: true,
           },
           {
             name: "rx_amplifier_gain_db",
-            label: "Receiver amplifier gain (dB)",
+            label: "Receiver Amplifier Gain (dB)",
             type: "number",
+            canBeNegative: true,
           },
           {
             name: "rx_loss_db",
-            label: "Receiver cable/feed loss (dB)",
+            label: "Receiver Cable/Feed Loss (dB)",
             type: "number",
+            canBeNegative: true,
           },
-          { name: "freq_mhz", label: "Frequency (MHz)", type: "number" },
-          { name: "distance_m", label: "Distance (meters)", type: "number" },
+          {
+            name: "freq_mhz",
+            label: "Frequency (MHz)",
+            type: "number",
+            canBeNegative: false,
+          },
+          {
+            name: "distance_m",
+            label: "Distance (meters)",
+            type: "number",
+            canBeNegative: false,
+          },
           {
             name: "path_loss_db",
             label: "Direct Path Loss (dB)",
             type: "number",
+            canBeNegative: true,
           },
-          { name: "other_loss_db", label: "Other losses (dB)", type: "number" },
-          { name: "fade_margin_db", label: "Fade margin (dB)", type: "number" },
-          { name: "data_rate_bps", label: "Data rate (bps)", type: "number" },
+          {
+            name: "other_loss_db",
+            label: "Other Losses (dB)",
+            type: "number",
+            canBeNegative: true,
+          },
+          {
+            name: "fade_margin_db",
+            label: "Fade Margin (dB)",
+            type: "number",
+            canBeNegative: true,
+          },
+          {
+            name: "data_rate_bps",
+            label: "Data Rate (bps)",
+            type: "number",
+            canBeNegative: false,
+          },
           {
             name: "noise_figure_db",
             label: "Noise Figure (dB)",
             type: "number",
+            canBeNegative: true,
           },
           {
             name: "noise_temp_K",
             label: "Noise Temperature (K)",
             type: "number",
+            canBeNegative: false,
           },
           {
             name: "required_ebn0_db",
             label: "Required Eb/N0 (dB)",
             type: "number",
+            canBeNegative: true,
           },
         ],
         cellular: [
           {
             name: "timeslots_per_carrier",
-            label: "Timeslots per carrier ",
+            label: "Timeslots per Carrier",
             type: "number",
+            canBeNegative: false,
           },
-          { name: "area_km2", label: "Coverage area (m²)", type: "number" },
+          {
+            name: "area_km2",
+            label: "Coverage Area (km²)",
+            type: "number",
+            canBeNegative: false,
+          },
           {
             name: "n_users",
-            label: "Total number of subscribers/users",
+            label: "Total Number of Subscribers/Users",
             type: "number",
+            canBeNegative: false,
           },
           {
             name: "call_rate",
-            label: "Average calls per subscriber per day",
+            label: "Average Calls per Subscriber per Day",
             type: "number",
             step: "0.01",
+            canBeNegative: false,
           },
           {
             name: "avg_call_duration_min",
-            label: "Average call duration (minutes)",
+            label: "Average Call Duration (minutes)",
             type: "number",
             step: "0.01",
+            canBeNegative: false,
           },
           {
             name: "min_sir_db",
-            label: "Minimum SIR required (dB)",
+            label: "Minimum SIR Required (dB)",
             type: "number",
             step: "0.01",
+            canBeNegative: true,
           },
           {
             name: "ref_power_db",
-            label: "Reference power at reference distance (dB)",
+            label: "Reference Power at Reference Distance (dB)",
             type: "number",
             step: "0.01",
+            canBeNegative: true,
           },
           {
             name: "ref_distance_m",
-            label: "Reference distance (meters)",
+            label: "Reference Distance (meters)",
             type: "number",
             step: "0.01",
+            canBeNegative: false,
           },
           {
             name: "path_loss_exp",
-            label: "Path loss exponent",
+            label: "Path Loss Exponent",
             type: "number",
             step: "0.01",
+            canBeNegative: false,
           },
           {
             name: "receiver_sensitivity_uw",
-            label: "Receiver sensitivity (μW)",
+            label: "Receiver Sensitivity (μW)",
             type: "number",
             step: "0.01",
+            canBeNegative: false,
           },
           {
             name: "cochannel_interferers",
-            label: "Number of co-channel interfering cells",
+            label: "Number of Co-channel Interfering Cells",
             type: "number",
+            canBeNegative: false,
           },
           {
             name: "n_channels",
-            label: "Number of channels (total)",
+            label: "Number of Channels (Total)",
             type: "number",
+            canBeNegative: false,
           },
         ],
       };
-
       const scenarioSelect = document.getElementById("scenario");
       const paramsForm = document.getElementById("params-form");
       const responseDiv = document.getElementById("response");
 
+      function validateAllNumberFields() {
+        let hasError = false;
+        const scenario = scenarioSelect.value;
+        paramsForm.querySelectorAll('input[type="number"]').forEach((input) => {
+          const inputDef = paramInputs[scenario].find(
+            (p) => p.name === input.name
+          );
+          const allowNegative = inputDef && inputDef.canBeNegative;
+          const errorId = "err-" + input.name;
+          let errDiv = document.getElementById(errorId);
+          const val = parseFloat(input.value);
+          if (!errDiv) {
+            errDiv = document.createElement("div");
+            errDiv.className = "error-message";
+            errDiv.id = errorId;
+            input.parentNode.appendChild(errDiv);
+          }
+          if (!allowNegative && !isNaN(val) && val < 0) {
+            input.classList.add("invalid");
+            errDiv.textContent = "Must be a positive number";
+            errDiv.style.display = "block";
+            hasError = true;
+          } else {
+            input.classList.remove("invalid");
+            errDiv.textContent = "";
+            errDiv.style.display = "none";
+          }
+        });
+        return !hasError;
+      }
+
       function renderForm() {
         const scenario = scenarioSelect.value;
         paramsForm.innerHTML = "";
-        paramInputs[scenario].forEach((input) => {
-          paramsForm.innerHTML += `
-          <label>${input.label}<br>
-            <input type="${input.type}" name="${input.name}" ${
-            input.step ? (step = "${input.step}") : ""
-          }>
-          </label>
-        `;
+        // Group inputs into pairs
+        const inputs = paramInputs[scenario];
+        for (let i = 0; i < inputs.length; i += 2) {
+          paramsForm.innerHTML += `<div class="input-row">
+          <div class="input-col">
+            <label class="input-label" for="${inputs[i].name}">${
+            inputs[i].label
+          }</label>
+            <input type="${inputs[i].type}" name="${inputs[i].name}" id="${
+            inputs[i].name
+          }" ${inputs[i].step ? `step="${inputs[i].step}"` : ""}>
+          </div>
+          ${
+            inputs[i + 1]
+              ? `
+          <div class="input-col">
+            <label class="input-label" for="${inputs[i + 1].name}">${
+                  inputs[i + 1].label
+                }</label>
+            <input type="${inputs[i + 1].type}" name="${
+                  inputs[i + 1].name
+                }" id="${inputs[i + 1].name}" ${
+                  inputs[i + 1].step ? `step="${inputs[i + 1].step}"` : ""
+                }>
+          </div>
+          `
+              : ""
+          }
+        </div>`;
+        }
+        paramsForm.querySelectorAll('input[type="number"]').forEach((input) => {
+          input.addEventListener("input", validateAllNumberFields);
         });
       }
 
@@ -372,6 +823,10 @@
       }
 
       async function submitForm() {
+        if (!validateAllNumberFields()) {
+          alert("One or more parameters must be a positive number!");
+          return;
+        }
         responseDiv.innerHTML = "Loading...";
         const scenario = scenarioSelect.value;
         const inputs = paramsForm.querySelectorAll("input");
@@ -381,7 +836,7 @@
           params[input.name] = input.value;
         }
         try {
-          const res = await fetch("/api/calculate", {
+          const res = await fetch("http:/api/calculate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ scenario, params }),
