@@ -229,7 +229,7 @@ def cellular_system_calc(params):
     results = {}
 
     timeslots_per_carrier = int(params.get('timeslots_per_carrier', 0)) or None
-    area_m2 = float(params.get('area_km2', 0)) or None
+    area_m2 = float(params.get('area_m2', 0)) or None
     n_users = int(params.get('n_users', 0)) or None
     call_rate = float(params.get('call_rate', 0)) or None
     avg_call_duration_min = float(params.get('avg_call_duration_min', 0)) or None
