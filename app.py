@@ -9,14 +9,12 @@ app = Flask(__name__, static_folder='static', template_folder='templates')
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 
-# === Gemini API Key ===
-genai.configure(api_key="AIzaSyC5Zk54SNRj64kj7MsGidogOkkwEsE_sH0")  # Replace with your real key
+genai.configure(api_key="AIzaSyC5Zk54SNRj64kj7MsGidogOkkwEsE_sH0") 
 
-# === Routes ===
 
 @app.route('/')
 def landing():
-    return render_template('index.html')  # Landing page (front/index.html)
+    return render_template('index.html') 
 
 @app.route('/frontend/<path:filename>')
 def serve_frontend(filename):
@@ -28,7 +26,7 @@ def wireless_system_calc(params):
     bits = int(params.get('bits_per_sample', 0)) or None
     src_cr = float(params.get('src_compression_rate', 0)) or None
     chan_cr = float(params.get('channel_code_rate', 0)) or None
-    burst_ov = float(params.get('burst_formatting_overhead', 0)) or 0.0  # e.g. 0.1 for 10%
+    burst_ov = float(params.get('burst_formatting_overhead', 0)) or 0.0
 
     if bw is not None and bw > 0:
         f_s = 2 * bw * 1000  
@@ -320,7 +318,6 @@ def calculate():
     scenario = data['scenario']
     params = data['params']
 
-    # Call correct calculator
     if scenario == "wireless":
         result = wireless_system_calc(params)
     elif scenario == "ofdm":
@@ -336,7 +333,6 @@ def calculate():
     explanation = ask_ai_for_explanation(scenario, params, result)
     return jsonify({"result": result, "explanation": explanation})
 
-# === Run Server ===
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000, debug=True)
